@@ -1,0 +1,14 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class MeuRegistro {
+    private List<String> entradasLog = new ArrayList<>();
+
+    public void adicionarEntrada(String entrada) {
+        entradasLog.add(entrada);
+    }
+
+    public List<String> getEntradasLog() {
+        return entradasLog;
+    }
+}
