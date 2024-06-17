@@ -1,0 +1,108 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class MeuSimuladorSistemaArquivos {
+    private MeuDiretorio raizDir;
+    private MeuRegistro registro;
+
+    public MeuSimuladorSistemaArquivos() {
+        raizDir = new MeuDiretorio("raiz");
+        registro = new MeuRegistro();
+    }
+
+    private MeuDiretorio encontrarDiretorio(String caminho) {
+        String[] partes = caminho.split("/");
+        MeuDiretorio dirAtual = raizDir;
+        for (String parte : partes) {
+            if (parte.isEmpty()) continue;
+            boolean encontrado = false;
+            for (MeuDiretorio subDir : dirAtual.getSubDiretorios()) {
+                if (subDir.getNomeDir().equals(parte)) {
+                    dirAtual = subDir;
+                    encontrado = true;
+                    break;
+                }
+            }
+            if (!encontrado) return null;
+        }
+        return dirAtual;
+    }
+
+    public void criarArquivo(String caminho, String nome) {
+        MeuDiretorio dir = encontrarDiretorio(caminho);
+        if (dir != null) {
+            MeuArquivo novoArquivo = new MeuArquivo(nome);
+            dir.adicionarArquivo(novoArquivo);
+            registro.adicionarEntrada("CRIAR ARQUIVO: " + caminho + "/" + nome);
+        }
+    }
+
+    public void deletarArquivo(String caminho, String nome) {
+        MeuDiretorio dir = encontrarDiretorio(caminho);
+        if (dir != null) {
+            dir.removerArquivo(nome);
+            registro.adicionarEntrada("DELETAR ARQUIVO: " + caminho + "/" + nome);
+        }
+    }
+
+    public void renomearArquivo(String caminho, String nomeAntigo, String nomeNovo) {
+        MeuDiretorio dir = encontrarDiretorio(caminho);
+        if (dir != null) {
+            for (MeuArquivo arquivo : dir.getListaArquivos()) {
+                if (arquivo.getNomeArquivo().equals(nomeAntigo)) {
+                    arquivo.setNomeArquivo(nomeNovo);
+                    registro.adicionarEntrada("RENOMEAR ARQUIVO: " + caminho + "/" + nomeAntigo + " para " + nomeNovo);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void criarDiretorio(String caminho, String nome) {
+        MeuDiretorio dir = encontrarDiretorio(caminho);
+        if (dir != null) {
+            MeuDiretorio novoDir = new MeuDiretorio(nome);
+            dir.adicionarSubDiretorio(novoDir);
+            registro.adicionarEntrada("CRIAR DIRETÓRIO: " + caminho + "/" + nome);
+        }
+    }
+
+    public void deletarDiretorio(String caminho, String nome) {
+        MeuDiretorio dir = encontrarDiretorio(caminho);
+        if (dir != null) {
+            dir.removerSubDiretorio(nome);
+            registro.adicionarEntrada("DELETAR DIRETÓRIO: " + caminho + "/" + nome);
+        }
+    }
+
+    public void renomearDiretorio(String caminho, String nomeAntigo, String nomeNovo) {
+        MeuDiretorio dir = encontrarDiretorio(caminho);
+        if (dir != null) {
+            for (MeuDiretorio subDir : dir.getSubDiretorios()) {
+                if (subDir.getNomeDir().equals(nomeAntigo)) {
+                    subDir.setNomeDir(nomeNovo);
+                    registro.adicionarEntrada("RENOMEAR DIRETÓRIO: " + caminho + "/" + nomeAntigo + " para " + nomeNovo);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void listarArquivos(String caminho) {
+        MeuDiretorio dir = encontrarDiretorio(caminho);
+        if (dir != null) {
+            System.out.println("Listando arquivos em: " + caminho);
+            for (MeuArquivo arquivo : dir.getListaArquivos()) {
+                System.out.println("Arquivo: " + arquivo.getNomeArquivo());
+            }
+            for (MeuDiretorio subDir : dir.getSubDiretorios()) {
+                System.out.println("Diretório: " + subDir.getNomeDir());
+            }
+            registro.adicionarEntrada("LISTAR ARQUIVOS: " + caminho);
+        }
+    }
+
+    public MeuRegistro getRegistro() {
+        return registro;
+    }
+}
