@@ -1,0 +1,44 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class MeuDiretorio {
+    private String nomeDir;
+    private List<MeuArquivo> listaArquivos = new ArrayList<>();
+    private List<MeuDiretorio> subDiretorios = new ArrayList<>();
+
+    public MeuDiretorio(String nomeDir) {
+        this.nomeDir = nomeDir;
+    }
+
+    public String getNomeDir() {
+        return nomeDir;
+    }
+
+    public void setNomeDir(String novoNome) {
+        this.nomeDir = novoNome;
+    }
+
+    public List<MeuArquivo> getListaArquivos() {
+        return listaArquivos;
+    }
+
+    public List<MeuDiretorio> getSubDiretorios() {
+        return subDiretorios;
+    }
+
+    public void adicionarArquivo(MeuArquivo arquivo) {
+        listaArquivos.add(arquivo);
+    }
+
+    public void adicionarSubDiretorio(MeuDiretorio subDir) {
+        subDiretorios.add(subDir);
+    }
+
+    public void removerArquivo(String nomeArquivo) {
+        listaArquivos.removeIf(arquivo -> arquivo.getNomeArquivo().equals(nomeArquivo));
+    }
+
+    public void removerSubDiretorio(String nomeSubDir) {
+        subDiretorios.removeIf(dir -> dir.getNomeDir().equals(nomeSubDir));
+    }
+}
